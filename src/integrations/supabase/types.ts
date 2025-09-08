@@ -14,7 +14,178 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      books: {
+        Row: {
+          author: string
+          availability_status: boolean
+          book_id: string
+          category: string
+          created_at: string
+          description: string | null
+          isbn: string | null
+          published_year: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author: string
+          availability_status?: boolean
+          book_id?: string
+          category: string
+          created_at?: string
+          description?: string | null
+          isbn?: string | null
+          published_year?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string
+          availability_status?: boolean
+          book_id?: string
+          category?: string
+          created_at?: string
+          description?: string | null
+          isbn?: string | null
+          published_year?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "books_category_fkey"
+            columns: ["category"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["category_id"]
+          },
+        ]
+      }
+      borrow_records: {
+        Row: {
+          book_id: string
+          created_at: string
+          due_date: string
+          issue_date: string
+          member_id: string
+          record_id: string
+          return_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          book_id: string
+          created_at?: string
+          due_date?: string
+          issue_date?: string
+          member_id: string
+          record_id?: string
+          return_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          book_id?: string
+          created_at?: string
+          due_date?: string
+          issue_date?: string
+          member_id?: string
+          record_id?: string
+          return_date?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "borrow_records_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["book_id"]
+          },
+          {
+            foreignKeyName: "borrow_records_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["member_id"]
+          },
+        ]
+      }
+      categories: {
+        Row: {
+          category_id: string
+          category_name: string
+          created_at: string
+        }
+        Insert: {
+          category_id?: string
+          category_name: string
+          created_at?: string
+        }
+        Update: {
+          category_id?: string
+          category_name?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
+      librarian_actions: {
+        Row: {
+          action_id: string
+          action_type: string
+          book_id: string | null
+          details: string | null
+          timestamp: string
+        }
+        Insert: {
+          action_id?: string
+          action_type: string
+          book_id?: string | null
+          details?: string | null
+          timestamp?: string
+        }
+        Update: {
+          action_id?: string
+          action_type?: string
+          book_id?: string | null
+          details?: string | null
+          timestamp?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "librarian_actions_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["book_id"]
+          },
+        ]
+      }
+      members: {
+        Row: {
+          created_at: string
+          email: string
+          member_id: string
+          name: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          member_id?: string
+          name: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          member_id?: string
+          name?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
