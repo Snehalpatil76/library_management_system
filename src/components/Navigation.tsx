@@ -19,7 +19,7 @@ const Navigation = () => {
           <div className="flex items-center space-x-2">
             <BookOpen className="h-8 w-8 text-primary" />
             <span className="text-xl font-bold gradient-primary bg-clip-text text-transparent">
-              LibraryMS
+              LibroHub
             </span>
           </div>
           
