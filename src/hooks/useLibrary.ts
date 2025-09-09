@@ -301,6 +301,40 @@ export const useLibrary = () => {
     };
 
     loadData();
+
+    // Set up real-time subscriptions for live updates
+    const booksSubscription = supabase
+      .channel('books_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'books' }, () => {
+        fetchBooks();
+      })
+      .subscribe();
+
+    const borrowSubscription = supabase
+      .channel('borrow_records_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'borrow_records' }, () => {
+        fetchBorrowRecords();
+      })
+      .subscribe();
+
+    const membersSubscription = supabase
+      .channel('members_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'members' }, () => {
+        fetchMembers();
+      })
+      .subscribe();
+
+    // Set up periodic refresh for real-time stats
+    const intervalId = setInterval(() => {
+      Promise.all([fetchBooks(), fetchBorrowRecords()]);
+    }, 10000); // Update every 10 seconds
+
+    return () => {
+      clearInterval(intervalId);
+      supabase.removeChannel(booksSubscription);
+      supabase.removeChannel(borrowSubscription);
+      supabase.removeChannel(membersSubscription);
+    };
   }, []);
 
   return {

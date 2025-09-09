@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
+import DatabaseActivity from "@/components/DatabaseActivity";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -40,8 +41,8 @@ const Index = () => {
               <BookOpen className="h-16 w-16 text-primary" />
             </div>
           </div>
-          <h1 className="text-5xl font-bold mb-4 gradient-primary bg-clip-text text-transparent">
-            Welcome to LibraryMS
+          <h1 className="text-5xl font-bold mb-4 text-foreground">
+            Welcome to <span className="text-primary">LibroHub</span>
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Your comprehensive library management solution. Search, borrow, and manage books with ease.
@@ -119,7 +120,7 @@ const Index = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <Card className="gradient-card hover:shadow-lg transition-all duration-300 cursor-pointer" onClick={() => navigate('/browse')}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -156,6 +157,9 @@ const Index = () => {
             </CardHeader>
           </Card>
         </div>
+
+        {/* Database Activity Section */}
+        <DatabaseActivity />
       </div>
     </Layout>
   );
