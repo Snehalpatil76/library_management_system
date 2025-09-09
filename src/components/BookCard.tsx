@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Calendar, User } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { BookOpen, Calendar, User, Trash2 } from "lucide-react";
 
 interface BookCardProps {
   book: {
@@ -17,14 +18,18 @@ interface BookCardProps {
   };
   onBorrow?: (bookId: string) => void;
   onReturn?: (bookId: string) => void;
+  onDelete?: (bookId: string) => void;
   showActions?: boolean;
+  showDelete?: boolean;
 }
 
 const BookCard: React.FC<BookCardProps> = ({ 
   book, 
   onBorrow, 
   onReturn, 
-  showActions = true 
+  onDelete,
+  showActions = true,
+  showDelete = false
 }) => {
   return (
     <Card className="gradient-card hover:shadow-lg transition-all duration-300 hover:scale-105">
@@ -76,7 +81,7 @@ const BookCard: React.FC<BookCardProps> = ({
           )}
           
           {showActions && (
-            <div className="pt-2">
+            <div className="pt-2 space-y-2">
               {book.availability_status ? (
                 onBorrow && (
                   <Button 
@@ -98,6 +103,38 @@ const BookCard: React.FC<BookCardProps> = ({
                     Return Book
                   </Button>
                 )
+              )}
+              
+              {showDelete && onDelete && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button 
+                      variant="destructive"
+                      size="sm"
+                      className="w-full"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete Book
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Delete Book</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to delete "{book.title}"? This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => onDelete(book.book_id)}
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      >
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               )}
             </div>
           )}

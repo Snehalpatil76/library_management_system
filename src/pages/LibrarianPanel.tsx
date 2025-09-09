@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Layout from "@/components/Layout";
+import BookCard from "@/components/BookCard";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,7 +16,7 @@ import { useLibrary } from "@/hooks/useLibrary";
 import { format, isAfter } from "date-fns";
 
 const LibrarianPanel = () => {
-  const { books, members, borrowRecords, categories, addBook, addMember, loading } = useLibrary();
+  const { books, members, borrowRecords, categories, addBook, addMember, deleteBook, loading } = useLibrary();
   
   // Add Book Form State
   const [bookForm, setBookForm] = useState({
@@ -365,24 +366,15 @@ const LibrarianPanel = () => {
                 <CardDescription>Manage your library's book inventory</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {books.map(book => (
-                    <div key={book.book_id} className="border border-border rounded-lg p-4">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <h3 className="font-semibold">{book.title}</h3>
-                          <p className="text-muted-foreground">by {book.author}</p>
-                        </div>
-                        <Badge variant={book.availability_status ? "default" : "destructive"}>
-                          {book.availability_status ? "Available" : "Borrowed"}
-                        </Badge>
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm text-muted-foreground">
-                        <span>Category: {book.category}</span>
-                        {book.isbn && <span>ISBN: {book.isbn}</span>}
-                        {book.published_year && <span>Year: {book.published_year}</span>}
-                      </div>
-                    </div>
+                    <BookCard
+                      key={book.book_id}
+                      book={book}
+                      showActions={false}
+                      showDelete={true}
+                      onDelete={deleteBook}
+                    />
                   ))}
                 </div>
               </CardContent>

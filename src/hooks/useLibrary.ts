@@ -288,6 +288,59 @@ export const useLibrary = () => {
     }
   };
 
+  const deleteBook = async (bookId: string) => {
+    try {
+      // Check if book is currently borrowed
+      const { data: borrowRecords, error: checkError } = await supabase
+        .from('borrow_records')
+        .select('*')
+        .eq('book_id', bookId)
+        .is('return_date', null);
+
+      if (checkError) throw checkError;
+
+      if (borrowRecords && borrowRecords.length > 0) {
+        toast({
+          variant: "destructive",
+          title: "Cannot Delete",
+          description: "Book is currently borrowed and cannot be deleted"
+        });
+        return;
+      }
+
+      // Delete the book
+      const { error } = await supabase
+        .from('books')
+        .delete()
+        .eq('book_id', bookId);
+
+      if (error) throw error;
+
+      // Log librarian action
+      await supabase
+        .from('librarian_actions')
+        .insert({
+          book_id: bookId,
+          action_type: 'BOOK_DELETED',
+          details: 'Book deleted from library'
+        });
+
+      await fetchBooks();
+      
+      toast({
+        title: "Success",
+        description: "Book deleted successfully!"
+      });
+    } catch (error) {
+      console.error('Error deleting book:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete book"
+      });
+    }
+  };
+
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -347,6 +400,7 @@ export const useLibrary = () => {
     returnBook,
     addBook,
     addMember,
+    deleteBook,
     refetch: () => Promise.all([fetchBooks(), fetchMembers(), fetchBorrowRecords(), fetchCategories()])
   };
 };
